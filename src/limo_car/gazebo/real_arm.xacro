@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="limo_ackermann" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="arm_control" default="mock"/>
+  <xacro:arg name="initial_positions_file"
+             default="$(find limo_cobot_moveit_config)/config/initial_positions.yaml"/>
+
+  <link name="base_footprint"/>
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0.0 0.0 0.15" rpy="0 0 0"/>
+  </joint>
+  <link name="base_link"/>
+
+  <xacro:include filename="$(find mycobot_description)/urdf/mycobot_280_m5/mycobot_280_m5.urdf" />
+  <xacro:mycobot_280 />
+
+  <joint name="mycobot_base_joint" type="fixed">
+    <origin xyz="-0.03 0 0.02" rpy="0 0 1.5708"/>
+    <parent link="base_link"/>
+    <child link="joint1"/>
+  </joint>
+
+  <xacro:include filename="$(find mycobot_description)/urdf/adaptive_gripper/mycobot_adaptive_gripper.urdf" />
+  <xacro:mycobot_gripper />
+
+  <joint name="gripper_to_arm_joint" type="fixed">
+    <origin xyz="0.0 0 0.034" rpy="1.579 0 1.5708"/>
+    <parent link="joint6_flange"/>
+    <child link="gripper_base"/>
+  </joint>
+
+  <link name="gripper_tcp"/>
+  <joint name="gripper_base_to_tcp" type="fixed">
+    <origin xyz="0 0.06 0" rpy="0 0 0"/>
+    <parent link="gripper_base"/>
+    <child link="gripper_tcp"/>
+  </joint>
+
+  <xacro:include filename="$(find limo_car)/gazebo/mycobot_ros2_control_real.xacro" />
+  <xacro:mycobot_real_ros2_control initial_positions_file="$(arg initial_positions_file)" arm_control="$(arg arm_control)"/>
+
+</robot>

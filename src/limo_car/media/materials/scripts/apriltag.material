@@ -1,0 +1,63 @@
+material AprilTag_0
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            texture_unit
+            {
+                texture apriltag_0.png
+                filtering none
+            }
+        }
+    }
+}
+
+material AprilTag_1
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            texture_unit
+            {
+                texture apriltag_1.png
+                filtering none
+            }
+        }
+    }
+}
+
+material AprilTag_2
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            texture_unit
+            {
+                texture apriltag_2.png
+                filtering none
+            }
+        }
+    }
+}
+
+material AprilTag_3
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            texture_unit
+            {
+                texture apriltag_3.png
+                filtering none
+            }
+        }
+    }
+}

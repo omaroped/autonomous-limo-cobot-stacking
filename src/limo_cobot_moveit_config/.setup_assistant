@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: limo_car
+    relative_path: gazebo/ackermann_with_sensor.xacro
+    xacro_args: ""
+  srdf:
+    relative_path: config/limo_cobot.srdf
+  package_settings:
+    author_name: Omar
+    author_email: 60348359+omaroped@users.noreply.github.com
+    generated_timestamp: 0

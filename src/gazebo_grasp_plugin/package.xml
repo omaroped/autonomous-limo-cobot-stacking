@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gazebo_grasp_plugin</name>
+  <version>1.0.0</version>
+  <description>
+    Gazebo Classic plugin that holds a gripped object with a fixed joint, made when the
+    fingers touch it and removed when the gripper opens. Based on GazeboGraspFix from
+    Jennifer Buehler's gazebo_grasp_plugin (https://github.com/JenniferBuehler/gazebo-pkgs).
+  </description>
+  <maintainer email="60348359+omaroped@users.noreply.github.com">Omar</maintainer>
+  <license>GPLv3</license>
+  <author>Jennifer Buehler</author>
+
+  <buildtool>cmake</buildtool>
+
+  <build_depend>libgazebo-dev</build_depend>
+  <exec_depend>libgazebo11</exec_depend>
+</package>

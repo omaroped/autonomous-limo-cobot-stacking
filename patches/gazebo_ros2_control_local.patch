@@ -1,0 +1,41 @@
+diff --git a/gazebo_ros2_control/src/gazebo_ros2_control_plugin.cpp b/gazebo_ros2_control/src/gazebo_ros2_control_plugin.cpp
+index a5d1db9..5bc97c3 100644
+--- a/gazebo_ros2_control/src/gazebo_ros2_control_plugin.cpp
++++ b/gazebo_ros2_control/src/gazebo_ros2_control_plugin.cpp
+@@ -218,11 +218,13 @@ void GazeboRosControlPlugin::Load(gazebo::physics::ModelPtr parent, sdf::Element
+       impl_->model_nh_->get_logger(), "No parameter file provided. Configuration might be wrong");
+   }
+ 
+-  // set the robot description parameter
+-  // to propagate it among controller manager and controllers
+-  std::string rb_arg = std::string("robot_description:=") + urdf_string;
+-  arguments.push_back(RCL_PARAM_FLAG);
+-  arguments.push_back(rb_arg);
++  // PATCHED: do NOT inject robot_description as a
++  // "--param robot_description:=<urdf>" CLI rule. controller_manager >= 2.x reads
++  // robot_description from the /robot_description topic (published by
++  // robot_state_publisher). The old --param path fails to parse in newer rcl
++  // ("Couldn't parse parameter override rule"), aborting plugin load and leaving
++  // the arm uncontrolled. GazeboSystem hardware is still built from urdf_string
++  // directly (see parse_control_resources_from_urdf / load_urdf below).
+ 
+   if (sdf->HasElement("ros")) {
+     sdf = sdf->GetElement("ros");
+diff --git a/gazebo_ros2_control/src/gazebo_system.cpp b/gazebo_ros2_control/src/gazebo_system.cpp
+index 3e71b1a..7881ded 100644
+--- a/gazebo_ros2_control/src/gazebo_system.cpp
++++ b/gazebo_ros2_control/src/gazebo_system.cpp
+@@ -751,8 +751,11 @@ GazeboSystem::perform_command_mode_switch(
+       if (interface_name ==
+         (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_POSITION))
+       {
+-        this->dataPtr->joint_control_methods_[j] |=
+-          static_cast<ControlMethod_>(this->dataPtr->position_control_method_);
++        // per joint, not the node-wide position_control_method_.
++        // Upstream sets that single member to POSITION_PID as soon as ANY joint has PID gains,
++        // which switched the gain-less gripper joints to a zero-gain PID (limp, flailing).
++        this->dataPtr->joint_control_methods_[j] |= static_cast<ControlMethod_>(
++          this->dataPtr->is_pos_pid[j] ? POSITION_PID : POSITION);
+       } else if (interface_name == // NOLINT
+         (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_VELOCITY))
+       {

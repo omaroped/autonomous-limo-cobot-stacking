@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot name="limo_ackermann" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="use_camera" default="true"/>
+    <xacro:property name="use_camera" value="$(arg use_camera)"/>
+
+    <xacro:include filename="$(find limo_car)/gazebo/ackermann.xacro" />
+    <xacro:include filename="$(find limo_car)/gazebo/sensor.xacro" />
+
+    <xacro:limo_ackermann />
+
+    <xacro:gazebo_laser frame_prefix="laser" />
+
+    <joint name="laser_joint" type="fixed">
+        <origin xyz="0.103 0 -0.034" rpy="0 0 0"/>        <parent link="base_link"/>
+        <child link="laser_link"/>
+    </joint>
+
+    <xacro:if value="${use_camera}">
+        <xacro:gazebo_depth_camera frame_prefix="depth_camera" />
+
+        <joint name="depth_camera_joint" type="fixed">
+            <origin xyz="0.091 0 0.030" rpy="0 0 0"/>
+            <parent link="base_link"/>
+            <child link="depth_camera_link"/>
+        </joint>
+    </xacro:if>
+
+    <xacro:gazebo_imu frame_prefix="imu" />
+
+    <joint name="imu_joint" type="fixed">
+        <origin xyz="0.0 0 -0.1" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+    </joint>
+
+    <xacro:include filename="$(find mycobot_description)/urdf/mycobot_280_m5/mycobot_280_m5.urdf" />
+    <xacro:mycobot_280 />
+    
+    <joint name="mycobot_base_joint" type="fixed">
+        <origin xyz="-0.02 0 -0.0045" rpy="0 0 1.5708"/>
+        <parent link="base_link"/>
+        <child link="joint1"/>
+    </joint>
+
+    <xacro:include filename="$(find mycobot_description)/urdf/adaptive_gripper/mycobot_adaptive_gripper.urdf" />
+    <xacro:mycobot_gripper />
+
+    <joint name="gripper_to_arm_joint" type="fixed">
+        <origin xyz="0.0 0 0.034" rpy="1.579 0 1.5708"/>
+        <parent link="joint6_flange"/>
+        <child link="gripper_base"/>
+    </joint>
+
+    <link name="gripper_tcp"/>
+    <joint name="gripper_base_to_tcp" type="fixed">
+        <origin xyz="0 0.06 -0.0075" rpy="0 0 0"/>
+        <parent link="gripper_base"/>
+        <child link="gripper_tcp"/>
+    </joint>
+
+    <xacro:include filename="$(find limo_car)/gazebo/mycobot_ros2_control.xacro" />
+
+</robot>

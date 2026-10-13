@@ -1,0 +1,35 @@
+robot:
+  bumper_x: 0.158
+
+  arm_reach: 0.24
+
+  bumper_clearance: 0.010
+
+  dock_gap: 0.025
+
+  spawn_pose:
+    x:    -2.0
+    y:     7.0
+    yaw:  -1.5708
+
+  base_link_ground_z: 0.145
+
+place_table:
+  centre_map: [-4.0, -2.0]
+  side:        0.08
+  top_z:       0.13
+  tag_id:      0
+  tag_size:    0.065
+  nav_approach: [-4.0, -1.30, -1.5708]
+
+pickup_table:
+  box_offset:  0.02
+  centre_map: [-2.0, 4.0]
+  depth:       0.08
+  width:       0.30
+  top_z:       0.13
+  nav_approach: [-2.0, 5.10, -1.5708]
+
+box:
+  size: 0.0247
+  width: 0.0247
